@@ -1,0 +1,38 @@
+{% layout none %}
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gift Card</title>
+  {{ content_for_header }}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  <style>
+    body { display:flex; justify-content:center; align-items:center; min-height:100vh; background:var(--color-bg); }
+    .gift-card { border: 2px solid var(--color-fg); padding: 4rem; text-align:center; max-width:600px; width:100%; box-shadow: 12px 12px 0px 0px var(--color-fg); }
+    .gift-card__logo { font-size:var(--text-6xl); font-family:var(--font-heading); text-transform:uppercase; margin-bottom:2rem; }
+    .gift-card__value { font-size:var(--text-4xl); font-weight:700; margin-bottom:1rem; }
+    .gift-card__code { display:inline-block; font-family:monospace; font-size:var(--text-2xl); background:var(--color-muted); border:1px solid var(--color-border); padding:1rem 2rem; margin:2rem 0; letter-spacing:0.2em; }
+    .gift-card__qr { margin:0 auto 2rem; }
+  </style>
+</head>
+<body>
+  <div class="gift-card">
+    <div class="gift-card__logo">{{ shop.name }}</div>
+    <div class="gift-card__value">₹{{ gift_card.initial_value | money_without_currency }} Gift Card</div>
+    {% if gift_card.enabled == false or gift_card.expired %}
+      <p style="color:red; font-weight:700;">{{ 'gift_cards.issued.disabled' | t }}</p>
+    {% else %}
+      <p style="color:var(--color-muted-fg);">{{ 'gift_cards.issued.subtext' | t }}</p>
+      <div class="gift-card__code" id="GiftCardDigits">{{ gift_card.code | format_code }}</div>
+      <div class="gift-card__qr">
+          <div id="qr-code" style="width:120px;height:120px;background:var(--color-bg);border:1px solid var(--color-border);margin:0 auto;"></div>
+      </div>
+      <div>
+        <a href="{{ shop.url }}" class="btn-primary" style="margin-top:1rem; display:inline-block;">{{ 'gift_cards.issued.shop_link' | t }}</a>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

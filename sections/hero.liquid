@@ -1,0 +1,63 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<section class="hero" id="hero">
+  <div class="hero__watermark">
+    <span class="hero__watermark-text">HEGGEE</span>
+    <span class="hero__watermark-text">HEGGEE</span>
+  </div>
+  <div class="hero__content">
+    <h1 class="hero__title">
+      {{ section.settings.heading_line1 | default: 'DEFY THE' }}<br>
+      {{ section.settings.heading_line2 | default: 'ORDINARY' }}
+    </h1>
+    {%- if section.settings.badge_text != blank -%}
+      <div>
+        <span class="hero__badge">{{ section.settings.badge_text }}</span>
+      </div>
+    {%- endif -%}
+    {%- if section.settings.cta_text != blank -%}
+      <div>
+        <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="hero__cta">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Heading Line 1",
+      "default": "DEFY THE"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Heading Line 2",
+      "default": "ORDINARY"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Boldly."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Shop Collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA Button Link"
+    }
+  ],
+  "presets": [{ "name": "Hero Banner" }]
+}
+{% endschema %}

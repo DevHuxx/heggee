@@ -1,0 +1,33 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="max-width:28rem;margin:0 auto;">
+    <h1 style="font-size:var(--text-4xl);text-align:center;margin-bottom:2rem;">{{ 'customer.login.create_account' | t }}</h1>
+    
+    {%- form 'create_customer' -%}
+      {{ form.errors | default_errors }}
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+        <div>
+          <input type="text" name="customer[first_name]" class="input-underline" placeholder="FIRST NAME" required autocomplete="given-name">
+        </div>
+        <div>
+          <input type="text" name="customer[last_name]" class="input-underline" placeholder="LAST NAME" required autocomplete="family-name">
+        </div>
+      </div>
+      
+      <div style="margin-bottom:1.5rem;">
+        <input type="email" name="customer[email]" class="input-underline" placeholder="EMAIL" required autocomplete="email">
+      </div>
+      
+      <div style="margin-bottom:1.5rem;">
+        <input type="password" name="customer[password]" class="input-underline" placeholder="PASSWORD" required autocomplete="new-password">
+      </div>
+      
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:1rem;">Create</button>
+      
+      <div style="text-align:center;margin-top:1.5rem;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);">
+        <a href="{{ routes.account_login_url }}" style="color:var(--color-muted-fg);transition:color 0.2s;">Already have an account? <span style="font-weight:700;color:var(--color-fg);">{{ 'customer.login.sign_in' | t }}</span></a>
+      </div>
+    {%- endform -%}
+  </div>
+</div>

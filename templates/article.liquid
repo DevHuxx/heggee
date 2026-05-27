@@ -1,0 +1,74 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <article style="max-width:48rem;margin:0 auto;">
+    
+    <header style="text-align:center;margin-bottom:4rem;border-bottom:1px solid var(--color-border);padding-bottom:2rem;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:var(--tracking-widest);color:var(--color-muted-fg);margin-bottom:1rem;">
+        {{ article.published_at | time_tag: format: 'date' }} {%- if article.author -%} • BY {{ article.author }}{%- endif -%}
+      </div>
+      <h1 style="font-size:var(--text-6xl);margin-bottom:2rem;line-height:1.1;">{{ article.title }}</h1>
+      
+      {%- if article.tags.size > 0 -%}
+        <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+          {%- for tag in article.tags -%}
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" style="font-size:10px;text-transform:uppercase;letter-spacing:var(--tracking-widest);border:1px solid var(--color-border);padding:0.25rem 0.75rem;">{{ tag }}</a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if article.image -%}
+      <div style="margin-bottom:4rem;border:1px solid var(--color-border);background:var(--color-muted);">
+        <img width="800" height="auto" src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title }}" style="width:100%;height:auto;display:block;">
+      </div>
+    {%- endif -%}
+
+    <div class="article-content" style="font-size:var(--text-lg);line-height:1.8;color:var(--color-fg);">
+      {{ article.content }}
+    </div>
+
+    <div style="margin-top:6rem;padding-top:2rem;border-top:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;">
+      <a href="{{ blog.url }}" style="font-family:var(--font-heading);font-weight:700;text-transform:uppercase;letter-spacing:var(--tracking-widest);font-size:var(--text-sm);">← Back to {{ blog.title }}</a>
+      
+      {%- if blog.next_article or blog.previous_article -%}
+        <div style="display:flex;gap:1.5rem;">
+          {%- if blog.previous_article -%}
+            <a href="{{ blog.previous_article }}" style="font-size:var(--text-sm);color:var(--color-muted-fg);text-transform:uppercase;letter-spacing:var(--tracking-wide);">{{ 'blogs.article.previous' | t }}</a>
+          {%- endif -%}
+          {%- if blog.next_article -%}
+            <a href="{{ blog.next_article }}" style="font-size:var(--text-sm);color:var(--color-fg);font-weight:700;text-transform:uppercase;letter-spacing:var(--tracking-wide);">{{ 'blogs.article.next' | t }}</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </article>
+</div>
+
+<style>
+.article-content h2, .article-content h3, .article-content h4 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+.article-content p {
+  margin-bottom: 1.5rem;
+  color: var(--color-muted-fg);
+}
+.article-content img {
+  border: 1px solid var(--color-border);
+  margin: 2rem 0;
+}
+.article-content blockquote {
+  border-left: 4px solid var(--color-fg);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+  font-size: var(--text-2xl);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  color: var(--color-fg);
+  line-height: 1.2;
+}
+</style>

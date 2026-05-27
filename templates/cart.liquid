@@ -1,0 +1,100 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="cart-page">
+  <div class="container" style="padding-top:2rem;padding-bottom:4rem;">
+
+    <h1 class="cart-page__title">{{ 'cart.general.title' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-empty">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <h2 class="cart-empty__title">{{ 'cart.general.empty' | t }}</h2>
+        <p class="cart-empty__text">{{ 'cart.general.empty_subtext' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'cart.general.shop_now' | t }}</a>
+      </div>
+    {%- else -%}
+
+      <div class="cart-layout">
+
+        {%- comment -%} Cart Items {%- endcomment -%}
+        <div class="cart-items">
+          {%- for item in cart.items -%}
+            <div class="cart-item" data-line="{{ forloop.index }}">
+              <div class="cart-item__image">
+                <a href="{{ item.url }}">
+                  {%- if item.image -%}
+                    <img width="800" height="auto" src="{{ item.image | image_url: width: 300 }}" alt="{{ item.title | escape }}" loading="lazy">
+                  {%- endif -%}
+                </a>
+              </div>
+              <div class="cart-item__details">
+                <div class="cart-item__header">
+                  <div>
+                    <h3 class="cart-item__title">
+                      <a href="{{ item.url }}">{{ item.product.title }}</a>
+                    </h3>
+                    {%- if item.variant.title != 'Default Title' -%}
+                      <p class="cart-item__variant">{{ item.variant.title }}</p>
+                    {%- endif -%}
+                  </div>
+                  <form action="{{ routes.cart_change_url }}" method="post">
+                    <input type="hidden" name="line" value="{{ forloop.index }}">
+                    <input type="hidden" name="quantity" value="0">
+                    <button type="submit" class="cart-item__remove" aria-label="Remove {{ item.title }}">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+                <div class="cart-item__footer">
+                  <div class="quantity-selector">
+                    <form action="{{ routes.cart_change_url }}" method="post" style="display:contents;">
+                      <input type="hidden" name="line" value="{{ forloop.index }}">
+                      <input type="hidden" name="quantity" value="{{ item.quantity | minus: 1 }}">
+                      <button type="submit" class="quantity-selector__btn" aria-label="Decrease">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      </button>
+                    </form>
+                    <span class="quantity-selector__input" style="display:flex;align-items:center;justify-content:center;border-left:1px solid var(--color-border);border-right:1px solid var(--color-border);">{{ item.quantity }}</span>
+                    <form action="{{ routes.cart_change_url }}" method="post" style="display:contents;">
+                      <input type="hidden" name="line" value="{{ forloop.index }}">
+                      <input type="hidden" name="quantity" value="{{ item.quantity | plus: 1 }}">
+                      <button type="submit" class="quantity-selector__btn" aria-label="Increase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      </button>
+                    </form>
+                  </div>
+                  <span class="cart-item__price">₹{{ item.final_line_price | money_without_currency }}</span>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Summary {%- endcomment -%}
+        <div class="cart-summary">
+          <h2 class="cart-summary__title">Order Summary</h2>
+          <div class="cart-summary__row">
+            <span class="cart-summary__label">{{ 'cart.general.subtotal' | t }}</span>
+            <span>₹{{ cart.total_price | money_without_currency }}</span>
+          </div>
+          <div class="cart-summary__row">
+            <span class="cart-summary__label">Shipping</span>
+            <span>Calculated at checkout</span>
+          </div>
+          <div class="cart-summary__row cart-summary__row--total">
+            <span>{{ 'customer.orders.total' | t }}</span>
+            <span>₹{{ cart.total_price | money_without_currency }}</span>
+          </div>
+          <a href="/checkout" class="btn-primary cart-summary__checkout">{{ 'cart.general.checkout' | t }}</a>
+          <p class="cart-summary__note">{{ 'cart.general.shipping_at_checkout' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="cart-summary__continue">{{ 'cart.general.continue_shopping' | t }}</a>
+        </div>
+
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="margin-bottom:4rem;border-bottom:1px solid var(--color-border);padding-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;">
+    <h1 style="font-size:var(--text-6xl);">{{ blog.title }}</h1>
+    <a href="{{ shop.url }}{{ blog.url }}.atom" style="color:var(--color-muted-fg);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);">{{ 'blogs.article.rss' | t }}</a>
+  </div>
+
+  {%- paginate blog.articles by 12 -%}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:3rem;">
+      {%- for article in blog.articles -%}
+        <article class="blog-card" style="border:1px solid var(--color-border);background:var(--color-bg);transition:all 0.3s;">
+          <a href="{{ article.url }}" style="display:block;text-decoration:none;">
+            {%- if article.image -%}
+              <div style="aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--color-border);background:var(--color-muted);">
+                <img width="800" height="auto" src="{{ article.image | image_url: width: 800 }}" alt="{{ article.title }}" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:all 0.5s;" class="blog-image">
+              </div>
+            {%- endif -%}
+            
+            <div style="padding:2rem;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:var(--tracking-widest);color:var(--color-muted-fg);margin-bottom:1rem;">
+                {{ article.published_at | time_tag: format: 'date' }} {%- if article.author -%} • BY {{ article.author }}{%- endif -%}
+              </div>
+              <h2 style="font-size:var(--text-2xl);font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-tight);margin-bottom:1rem;line-height:1.2;">{{ article.title }}</h2>
+              <div style="color:var(--color-muted-fg);font-size:var(--text-sm);line-height:1.6;margin-bottom:2rem;">
+                {%- if article.excerpt.size > 0 -%}
+                  {{ article.excerpt }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncatewords: 30 }}
+                {%- endif -%}
+              </div>
+              <span style="font-family:var(--font-heading);font-size:12px;text-transform:uppercase;letter-spacing:var(--tracking-widest);font-weight:700;border-bottom:2px solid var(--color-fg);padding-bottom:4px;">{{ 'blogs.article.read_more' | t }}</span>
+            </div>
+          </a>
+        </article>
+      {%- else -%}
+        <div style="grid-column:1/-1;text-align:center;padding:4rem 0;">
+          <p style="color:var(--color-muted-fg);">{{ 'blogs.article.no_articles' | t }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div style="margin-top:4rem;text-align:center;">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="btn-outline" style="margin-right:1rem;">Prev</a>
+        {%- endif -%}
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="btn-outline">{{ 'blogs.article.next' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+<style>
+.blog-card:hover {
+  box-shadow: 6px 6px 0px 0px var(--color-fg);
+  transform: translate(-2px, -2px);
+}
+.blog-card:hover .blog-image {
+  transform: scale(1.05);
+  filter: grayscale(0) !important;
+}
+</style>

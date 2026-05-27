@@ -1,0 +1,96 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;border-bottom:1px solid var(--color-border);padding-bottom:1rem;">
+    <div>
+      <h1 style="font-size:var(--text-4xl);">{{ 'customer.addresses.title' | t }}</h1>
+      <a href="{{ routes.account_url }}" style="color:var(--color-muted-fg);font-size:var(--text-sm);text-transform:uppercase;letter-spacing:var(--tracking-widest);margin-top:0.5rem;display:inline-block;">← {{ 'customer.orders.return_to_account' | t }}</a>
+    </div>
+    <button type="button" class="btn-primary" onclick="document.getElementById('AddAddress').style.display='block';">{{ 'customer.addresses.add_new' | t }}</button>
+  </div>
+
+  <div id="AddAddress" style="display:none;background:var(--color-muted);padding:2rem;border:1px solid var(--color-border);margin-bottom:3rem;">
+    <h2 style="font-size:var(--text-2xl);margin-bottom:1.5rem;">Add a New Address</h2>
+    {%- form 'customer_address', customer.new_address -%}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+        <input type="text" id="AddressFirstNameNew" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name" class="input-underline" placeholder="{{ 'customer.addresses.first_name' | t }}">
+        <input type="text" id="AddressLastNameNew" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name" class="input-underline" placeholder="{{ 'customer.addresses.last_name' | t }}">
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <input type="text" id="AddressCompanyNew" name="address[company]" value="{{ form.company }}" autocomplete="organization" class="input-underline" placeholder="Company">
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <input type="text" id="AddressAddress1New" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1" class="input-underline" placeholder="Address 1" required>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <input type="text" id="AddressAddress2New" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2" class="input-underline" placeholder="Address 2">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+        <input type="text" id="AddressCityNew" name="address[city]" value="{{ form.city }}" autocomplete="address-level2" class="input-underline" placeholder="City" required>
+        <select id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}" autocomplete="country" class="input-underline" required>
+          {{ all_country_option_tags }}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+        <div id="AddressProvinceContainerNew" style="display:none;">
+          <select id="AddressProvinceNew" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1" class="input-underline"></select>
+        </div>
+        <input type="text" id="AddressZipNew" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code" class="input-underline" placeholder="Postal/Zip Code" required>
+      </div>
+      <div style="margin-bottom:2rem;">
+        <input type="tel" id="AddressPhoneNew" name="address[phone]" value="{{ form.phone }}" autocomplete="tel" class="input-underline" placeholder="Phone">
+      </div>
+      <div style="margin-bottom:2rem;">
+        {{ form.set_as_default_checkbox }}
+        <label for="address_default_address_new" style="font-size:var(--text-sm);text-transform:uppercase;letter-spacing:var(--tracking-widest);margin-left:0.5rem;">{{ 'customer.addresses.set_default' | t }} address</label>
+      </div>
+      <div style="display:flex;gap:1rem;">
+        <button type="submit" class="btn-primary">Add Address</button>
+        <button type="button" class="btn-outline" onclick="document.getElementById('AddAddress').style.display='none';">{{ 'customer.addresses.cancel' | t }}</button>
+      </div>
+    {%- endform -%}
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:2rem;">
+    {%- for address in customer.addresses -%}
+      <div style="border:1px solid var(--color-border);padding:2rem;position:relative;{% if address == customer.default_address %}background:var(--color-bg);box-shadow:4px 4px 0px 0px var(--color-fg);{% else %}background:var(--color-muted);{% endif %}">
+        {%- if address == customer.default_address -%}
+          <span style="position:absolute;top:1rem;right:1rem;background:var(--color-fg);color:var(--color-bg);font-size:10px;padding:0.2rem 0.5rem;text-transform:uppercase;letter-spacing:var(--tracking-widest);font-weight:700;">Default</span>
+        {%- endif -%}
+        
+        <h3 style="font-size:var(--text-xl);margin-bottom:1rem;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-tight);">{{ address.name }}</h3>
+        <div style="color:var(--color-muted-fg);font-size:var(--text-sm);line-height:1.6;margin-bottom:1.5rem;">
+          {{ address | format_address }}
+        </div>
+        
+        <div style="display:flex;gap:1rem;border-top:1px solid var(--color-border-light);padding-top:1rem;">
+          <button type="button" style="font-family:var(--font-heading);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);transition:opacity 0.2s;" onclick="document.getElementById('EditAddress_{{ address.id }}').style.display='block';">{{ 'customer.addresses.edit' | t }}</button>
+          
+          <form method="post" action="{{ routes.account_addresses_url }}/{{ address.id }}" onsubmit="return confirm('{{ 'customer.addresses.delete_confirm' | t }}');" style="margin:0;">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" style="color:red;font-family:var(--font-heading);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);transition:opacity 0.2s;">{{ 'customer.addresses.delete' | t }}</button>
+          </form>
+        </div>
+        
+        <div id="EditAddress_{{ address.id }}" style="display:none;position:absolute;inset:0;background:var(--color-bg);z-index:10;padding:2rem;border:1px solid var(--color-border);overflow-y:auto;">
+          <h3 style="font-size:var(--text-xl);margin-bottom:1rem;">Edit Address</h3>
+          {%- form 'customer_address', address -%}
+            <div style="margin-bottom:1rem;"><input type="text" name="address[first_name]" value="{{ form.first_name }}" class="input-underline" placeholder="{{ 'customer.addresses.first_name' | t }}"></div>
+            <div style="margin-bottom:1rem;"><input type="text" name="address[address1]" value="{{ form.address1 }}" class="input-underline" placeholder="Address"></div>
+            <div style="margin-bottom:1rem;"><input type="text" name="address[city]" value="{{ form.city }}" class="input-underline" placeholder="City"></div>
+            <div style="margin-bottom:1rem;"><input type="text" name="address[zip]" value="{{ form.zip }}" class="input-underline" placeholder="Zip Code"></div>
+            <div style="margin-bottom:1.5rem;">
+              {{ form.set_as_default_checkbox }}
+              <label for="address_default_address_{{ form.id }}" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);margin-left:0.5rem;">{{ 'customer.addresses.set_default' | t }}</label>
+            </div>
+            <div style="display:flex;gap:1rem;">
+              <button type="submit" class="btn-primary" style="padding:0.75rem 1rem;">{{ 'customer.addresses.update' | t }}</button>
+              <button type="button" class="btn-outline" style="padding:0.75rem 1rem;" onclick="document.getElementById('EditAddress_{{ address.id }}').style.display='none';">{{ 'customer.addresses.cancel' | t }}</button>
+            </div>
+          {%- endform -%}
+        </div>
+
+      </div>
+    {%- endfor -%}
+  </div>
+
+</div>

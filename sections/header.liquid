@@ -1,0 +1,97 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<header class="site-header" id="site-header">
+
+  {%- comment -%} Marquee Bar {%- endcomment -%}
+  <div class="marquee-bar">
+    <div class="marquee-bar__inner">
+      {%- for i in (1..10) -%}
+        <span class="marquee-bar__text">{{ section.settings.marquee_text | default: 'FREE SHIPPING WORLDWIDE • DROP 001 LIVE NOW • HEGGEE EXCLUSIVE •' }}</span>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- comment -%} Main Header {%- endcomment -%}
+  <div class="container">
+    <div class="header-inner">
+
+      {%- comment -%} Mobile Menu Button {%- endcomment -%}
+      <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      {%- comment -%} Logo {%- endcomment -%}
+      <div class="header-logo" style="position:absolute;left:50%;transform:translateX(-50%);">
+        <a href="{{ routes.root_url }}">
+          {%- if settings.logo != blank -%}
+            <img width="800" height="auto" src="{{ settings.logo | image_url: width: settings.logo_width }}" alt="{{ shop.name }}" style="height:40px">
+          {%- else -%}
+            {{ settings.logo_text | default: 'HEGGEE' }}
+          {%- endif -%}
+        </a>
+      </div>
+
+      {%- comment -%} Desktop Nav {%- endcomment -%}
+      <nav class="header-nav" style="position:static;">
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}" class="header-nav__link{% if link.active %} is-active{% endif %}">
+            {{ link.title }}
+          </a>
+        {%- endfor -%}
+      </nav>
+
+      {%- comment -%} Actions {%- endcomment -%}
+      <div class="header-actions">
+        <a href="{{ routes.search_url }}" class="header-action-btn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>
+          </svg>
+        </a>
+        <a href="{{ routes.account_url }}" class="header-action-btn" aria-label="Account">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </a>
+        <button class="header-action-btn" id="cart-drawer-toggle" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="cart-count"{% if cart.item_count == 0 %} style="display:none"{% endif %}>{{ cart.item_count }}</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  {%- comment -%} Mobile Nav {%- endcomment -%}
+  <nav class="mobile-nav" id="mobile-nav">
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+    {%- endfor -%}
+    <a href="{{ routes.account_url }}" class="mobile-nav__link">Account</a>
+  </nav>
+
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Marquee Bar Text",
+      "default": "FREE SHIPPING WORLDWIDE • DROP 001 LIVE NOW • HEGGEE EXCLUSIVE •"
+    }
+  ]
+}
+{% endschema %}

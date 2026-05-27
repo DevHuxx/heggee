@@ -1,0 +1,43 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<section class="newsletter" id="newsletter">
+  <h2 class="newsletter__title">{{ section.settings.heading | default: 'Join the Cult' }}</h2>
+  <p class="newsletter__subtitle">{{ section.settings.subheading | default: 'No spam. Just drops.' }}</p>
+
+  {%- form 'customer', id: 'newsletter-form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    {%- if form.posted_successfully? -%}
+      <p style="text-align:center;font-family:var(--font-heading);font-size:var(--text-xl);text-transform:uppercase;letter-spacing:var(--tracking-widest);">Thank you for subscribing!</p>
+    {%- else -%}
+      <div class="newsletter__form">
+        <input
+          type="email"
+          name="contact[email]"
+          class="newsletter__input"
+          placeholder="YOUR EMAIL"
+          required
+          autocomplete="email"
+          aria-label="Email address"
+        >
+        <button type="submit" class="newsletter__submit">Subscribe</button>
+      </div>
+    {%- endif -%}
+
+    {%- if form.errors -%}
+      <p style="text-align:center;font-size:var(--text-sm);color:red;margin-top:1rem;">
+        {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+      </p>
+    {%- endif -%}
+  {%- endform -%}
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Join the Cult" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "No spam. Just drops." }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

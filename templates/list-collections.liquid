@@ -1,0 +1,35 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="text-align:center;padding:4rem 0;border-bottom:1px solid var(--color-border);margin-bottom:4rem;">
+    <h1 style="font-size:var(--text-6xl);margin-bottom:1rem;">{{ 'collections.general.all_collections' | t }}</h1>
+    <p style="color:var(--color-muted-fg);font-size:var(--text-lg);">{{ 'collections.general.explore' | t }}</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:2rem;">
+    {%- for collection in collections -%}
+      <a href="{{ collection.url }}" style="display:block;border:1px solid var(--color-border);text-decoration:none;group;transition:all 0.3s;background:var(--color-bg);" class="collection-tile">
+        <div style="aspect-ratio:4/3;background:var(--color-muted);overflow:hidden;border-bottom:1px solid var(--color-border);">
+          {%- if collection.image or collection.products.first.featured_image -%}
+            {%- assign image_url = collection.image | default: collection.products.first.featured_image -%}
+            <img width="800" height="auto" src="{{ image_url | image_url: width: 600 }}" alt="{{ collection.title }}" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;filter:grayscale(100%);">
+          {%- endif -%}
+        </div>
+        <div style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;">
+          <h2 style="font-family:var(--font-heading);font-size:var(--text-2xl);text-transform:uppercase;letter-spacing:var(--tracking-widest);">{{ collection.title }}</h2>
+          <span style="font-size:var(--text-sm);color:var(--color-muted-fg);">({{ collection.all_products_count }})</span>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+.collection-tile:hover {
+  box-shadow: 6px 6px 0px 0px var(--color-fg);
+  transform: translate(-2px, -2px);
+}
+.collection-tile:hover img {
+  transform: scale(1.05);
+  filter: grayscale(0) !important;
+}
+</style>

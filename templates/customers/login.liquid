@@ -1,0 +1,52 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="max-width:28rem;margin:0 auto;">
+    
+    <div id="CustomerLoginForm">
+      <h1 style="font-size:var(--text-4xl);text-align:center;margin-bottom:2rem;">{{ 'customer.login.sign_in' | t }}</h1>
+      
+      {%- form 'customer_login' -%}
+        {{ form.errors | default_errors }}
+        
+        <div style="margin-bottom:1.5rem;">
+          <input type="email" name="customer[email]" class="input-underline" placeholder="EMAIL" required autofocus autocomplete="email">
+        </div>
+        
+        <div style="margin-bottom:1.5rem;">
+          <input type="password" name="customer[password]" class="input-underline" placeholder="PASSWORD" required autocomplete="current-password">
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width:100%;margin-top:1rem;">{{ 'customer.login.sign_in' | t }}</button>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);">
+          <a href="#RecoverPasswordForm" onclick="document.getElementById('RecoverPasswordForm').style.display='block';document.getElementById('CustomerLoginForm').style.display='none';return false;" style="color:var(--color-muted-fg);transition:color 0.2s;">Forgot Password?</a>
+          <a href="{{ routes.account_register_url }}" style="font-weight:700;">{{ 'customer.login.create_account' | t }}</a>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <div id="RecoverPasswordForm" style="display:none;">
+      <h2 style="font-size:var(--text-3xl);text-align:center;margin-bottom:1rem;">{{ 'customer.recover_password.title' | t }}</h2>
+      <p style="text-align:center;color:var(--color-muted-fg);font-size:var(--text-sm);margin-bottom:2rem;">{{ 'customer.recover_password.subtext' | t }}</p>
+      
+      {%- form 'recover_customer_password' -%}
+        {{ form.errors | default_errors }}
+        
+        {%- if form.posted_successfully? -%}
+          <p class="form-success" style="color:green;text-align:center;margin-bottom:1rem;">We've sent you an email with a link to update your password.</p>
+        {%- endif -%}
+        
+        <div style="margin-bottom:1.5rem;">
+          <input type="email" name="email" class="input-underline" placeholder="EMAIL" required autocomplete="email">
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width:100%;margin-top:1rem;">Submit</button>
+        
+        <div style="text-align:center;margin-top:1.5rem;">
+          <a href="#CustomerLoginForm" onclick="document.getElementById('RecoverPasswordForm').style.display='none';document.getElementById('CustomerLoginForm').style.display='block';return false;" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:var(--tracking-widest);color:var(--color-muted-fg);">{{ 'customer.addresses.cancel' | t }}</a>
+        </div>
+      {%- endform -%}
+    </div>
+
+  </div>
+</div>

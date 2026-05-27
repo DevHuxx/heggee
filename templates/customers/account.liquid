@@ -1,0 +1,68 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;border-bottom:1px solid var(--color-border);padding-bottom:1rem;">
+    <h1 style="font-size:var(--text-4xl);">{{ 'customer.account.title' | t }}</h1>
+    <a href="{{ routes.account_logout_url }}" class="btn-ghost" style="color:var(--color-muted-fg);">Log Out</a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:4rem;">
+    {%- if true -%}{%- comment -%}Desktop Grid (1fr 300px){%- endcomment -%}
+    <div style="display:grid;gap:4rem;" class="account-grid">
+      
+      <div>
+        <h2 style="font-size:var(--text-xl);margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:var(--tracking-widest);">{{ 'customer.account.order_history' | t }}</h2>
+        {% paginate customer.orders by 20 %}
+          {%- if customer.orders.size > 0 -%}
+            <table style="width:100%;text-align:left;border-collapse:collapse;font-size:var(--text-sm);">
+              <thead>
+                <tr style="border-bottom:1px solid var(--color-border);">
+                  <th style="padding:1rem 0;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-widest);">{{ 'customer.orders.order' | t }}</th>
+                  <th style="padding:1rem 0;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-widest);">Date</th>
+                  <th style="padding:1rem 0;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-widest);">Payment</th>
+                  <th style="padding:1rem 0;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-widest);">Fulfillment</th>
+                  <th style="padding:1rem 0;font-family:var(--font-heading);text-transform:uppercase;letter-spacing:var(--tracking-widest);">{{ 'customer.orders.total' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr style="border-bottom:1px solid var(--color-border-light);">
+                    <td style="padding:1rem 0;font-weight:500;"><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                    <td style="padding:1rem 0;color:var(--color-muted-fg);">{{ order.created_at | time_tag: format: 'date' }}</td>
+                    <td style="padding:1rem 0;color:var(--color-muted-fg);">{{ order.financial_status_label }}</td>
+                    <td style="padding:1rem 0;color:var(--color-muted-fg);">{{ order.fulfillment_status_label }}</td>
+                    <td style="padding:1rem 0;">₹{{ order.total_price | money_without_currency }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          {%- else -%}
+            <div style="padding:3rem 0;text-align:center;background:var(--color-muted);border:1px solid var(--color-border);">
+              <p style="color:var(--color-muted-fg);margin-bottom:1rem;">{{ 'customer.account.no_orders' | t }}</p>
+              <a href="{{ routes.all_products_collection_url }}" class="btn-outline">{{ 'gift_cards.issued.shop_link' | t }}</a>
+            </div>
+          {%- endif -%}
+        {% endpaginate %}
+      </div>
+
+      <div>
+        <h2 style="font-size:var(--text-xl);margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:var(--tracking-widest);">Account Details</h2>
+        <div style="background:var(--color-muted);padding:2rem;border:1px solid var(--color-border);">
+          <p style="font-weight:700;margin-bottom:0.5rem;font-size:var(--text-lg);">{{ customer.name }}</p>
+          <p style="color:var(--color-muted-fg);font-size:var(--text-sm);margin-bottom:1.5rem;">{{ customer.email }}</p>
+
+          {{ customer.default_address | format_address }}
+
+          <a href="{{ routes.account_addresses_url }}" class="btn-outline" style="margin-top:1.5rem;display:inline-block;">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a>
+        </div>
+      </div>
+      
+    </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+@media(min-width: 1024px){
+  .account-grid { grid-template-columns: 1fr 300px; }
+}
+</style>

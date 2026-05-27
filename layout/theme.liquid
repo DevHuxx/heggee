@@ -1,0 +1,80 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>
+    {%- if page_title -%}
+      {{ page_title }} — {{ shop.name }}
+    {%- else -%}
+      {{ shop.name }} — Defy The Ordinary
+    {%- endif -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32 }}">
+  {%- endif -%}
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  
+  <style>
+    :root {
+      --color-primary: {{ settings.color_fg | default: '#000000' }};
+      --color-primary-text: {{ settings.color_bg | default: '#FFFFFF' }};
+      --color-bg: {{ settings.color_bg | default: '#FFFFFF' }};
+      --color-fg: {{ settings.color_fg | default: '#000000' }};
+      --color-muted: {{ settings.color_muted | default: '#F4F4F4' }};
+      --color-muted-fg: #6B7280;
+      --color-border: {{ settings.color_border | default: '#E5E5E5' }};
+      --color-border-light: rgba(0, 0, 0, 0.05);
+
+      --font-heading: 'Oswald', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: monospace;
+    }
+  </style>
+
+  {{ content_for_header }}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }}
+    }
+  </script>
+</head>
+<body id="{{ page_title | handle }}" class="template-{{ template.name | handle }}">
+
+  <a class="skip-to-content-link" href="#MainContent">Skip to content</a>
+
+  <div id="page-overlay" class="page-overlay"></div>
+
+  {% section 'announcement-bar' %}
+  {% section 'header' %}
+
+  <main id="MainContent" class="content-for-layout" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  {%- comment -%} Cart Drawer {%- endcomment -%}
+  {% render 'cart-drawer' %}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+</body>
+</html>

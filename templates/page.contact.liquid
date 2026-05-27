@@ -1,0 +1,38 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="max-width:36rem;margin:0 auto;">
+    <h1 style="font-size:var(--text-4xl);text-align:center;margin-bottom:1rem;">{{ page.title | default: 'Contact Us' }}</h1>
+    <p style="text-align:center;color:var(--color-muted-fg);margin-bottom:3rem;">
+      {{ page.content | default: 'Got a question? We’d love to hear from you. Send us a message and we’ll respond as soon as possible.' }}
+    </p>
+
+    {%- form 'contact' -%}
+      {%- if form.posted_successfully? -%}
+        <div style="background:var(--color-fg);color:var(--color-bg);padding:1rem;margin-bottom:2rem;text-align:center;font-weight:500;">
+          Thanks for contacting us. We'll get back to you soon.
+        </div>
+      {%- endif -%}
+
+      {{ form.errors | default_errors }}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+        <div>
+          <input type="text" name="contact[name]" id="ContactFormName" class="input-underline" placeholder="NAME" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+        </div>
+        <div>
+          <input type="email" name="contact[email]" id="ContactFormEmail" class="input-underline" placeholder="EMAIL" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" spellcheck="false" autocomplete="email" required>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <input type="tel" name="contact[phone]" id="ContactFormPhone" class="input-underline" placeholder="PHONE NUMBER" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" pattern="[0-9\-]*">
+      </div>
+
+      <div style="margin-bottom:2rem;">
+        <textarea rows="5" name="contact[body]" id="ContactFormMessage" class="input-underline" placeholder="MESSAGE" required>{%- if form.body -%}{{ form.body }}{%- endif -%}</textarea>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;">Send Message</button>
+    {%- endform -%}
+  </div>
+</div>

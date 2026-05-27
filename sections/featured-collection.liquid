@@ -1,0 +1,61 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+{%- assign collection = section.settings.collection -%}
+{%- assign limit = section.settings.products_to_show | default: 4 -%}
+
+{%- comment -%} Marquee Heading {%- endcomment -%}
+<section class="marquee-section">
+  <div class="marquee-section__inner">
+    <span class="marquee-section__text">New Arrivals •</span>
+    <span class="marquee-section__text marquee-section__text--outline">New Arrivals •</span>
+    <span class="marquee-section__text">New Arrivals •</span>
+    <span class="marquee-section__text marquee-section__text--outline">New Arrivals •</span>
+  </div>
+</section>
+
+{%- comment -%} Products {%- endcomment -%}
+<section class="featured-products">
+  <div class="product-grid product-grid--divided">
+    {%- if collection != blank -%}
+      {%- for product in collections[collection].products limit: limit -%}
+        <div class="reveal">
+          {%- render 'product-card', product: product -%}
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..limit) -%}
+        <div class="reveal">
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'product-card__image' }}
+            </div>
+            <div class="product-card__info">
+              <h3 class="product-card__title"><a href="#">Sample Product {{ forloop.index }}</a></h3>
+              <p class="product-card__category">Essentials</p>
+              <div class="product-card__price"><span>₹4,999</span></div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_view_all -%}
+    <div class="featured-footer">
+      <a href="{{ collections[collection].url | default: '/collections/all' }}">
+        View All Products →
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products to Show", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show View All", "default": true }
+  ],
+  "presets": [{ "name": "Featured Collection" }]
+}
+{% endschema %}

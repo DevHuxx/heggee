@@ -1,0 +1,25 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="container" style="padding-top:calc(2rem + 6rem);padding-bottom:4rem;">
+  <div style="max-width:48rem;margin:0 auto;text-align:center;">
+    <h1 style="font-size:var(--text-6xl);margin-bottom:2rem;">{{ page.title | default: 'About Us' }}</h1>
+    
+    <div style="font-size:var(--text-lg);color:var(--color-muted-fg);line-height:1.8;margin-bottom:4rem;">
+      {{ page.content | default: 'We are HEGGEE. Born from the streets, built for the bold. We defy the ordinary by creating clothing that commands attention.' }}
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:2rem;">
+    <div style="background:var(--color-muted);padding:3rem;text-align:center;">
+      <h3 style="font-size:var(--text-2xl);margin-bottom:1rem;">Our Mission</h3>
+      <p style="color:var(--color-muted-fg);">To disrupt the fashion industry with unapologetic designs and uncompromising quality.</p>
+    </div>
+    <div style="background:var(--color-fg);color:var(--color-bg);padding:3rem;text-align:center;">
+      <h3 style="font-size:var(--text-2xl);margin-bottom:1rem;">The Aesthetic</h3>
+      <p style="color:rgba(255,255,255,0.7);">Brutalist. Raw. Authentic. Every piece is a statement.</p>
+    </div>
+    <div style="background:var(--color-muted);padding:3rem;text-align:center;">
+      <h3 style="font-size:var(--text-2xl);margin-bottom:1rem;">Sustainability</h3>
+      <p style="color:var(--color-muted-fg);">Ethically crafted with materials that respect our planet, because the future matters.</p>
+    </div>
+  </div>
+</div>

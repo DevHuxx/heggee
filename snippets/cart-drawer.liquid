@@ -1,0 +1,95 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+{%- comment -%} Cart Drawer — slides in from right {%- endcomment -%}
+
+<div id="cart-drawer-overlay" class="cart-drawer-overlay"></div>
+
+<div id="cart-drawer" class="cart-drawer">
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">{{ 'cart.general.title' | t }}</h2>
+    <button class="cart-drawer__close" id="cart-drawer-close" aria-label="Close cart">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  {%- comment -%} Free Shipping Progress Bar {%- endcomment -%}
+  {%- if cart.item_count > 0 -%}
+    {%- assign free_shipping_threshold = 500000 -%} {% comment %} 5000.00 INR {% endcomment %}
+    <div style="padding: 1.5rem 1.5rem 0; border-bottom: 1px solid var(--color-border); background: var(--color-muted);">
+      {%- if cart.total_price >= free_shipping_threshold -%}
+        <p style="font-size: var(--text-sm); font-weight: 600; margin-bottom: 0.5rem; text-align: center;">You have unlocked FREE SHIPPING!</p>
+        <div style="height: 4px; background: var(--color-fg); width: 100%; margin-bottom: 1rem;"></div>
+      {%- else -%}
+        {%- assign amount_left = free_shipping_threshold | minus: cart.total_price -%}
+        {%- assign percentage = cart.total_price | times: 100 | divided_by: free_shipping_threshold -%}
+        <p style="font-size: var(--text-sm); margin-bottom: 0.5rem; text-align: center;">You are <strong>₹{{ amount_left | money_without_currency }}</strong> away from FREE SHIPPING!</p>
+        <div style="height: 4px; background: rgba(0,0,0,0.1); width: 100%; margin-bottom: 1rem; position: relative;">
+          <div style="height: 100%; background: var(--color-fg); width: {{ percentage }}%; transition: width 0.3s ease;"></div>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="cart-drawer__items">
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-empty">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <h3 class="cart-empty__title">{{ 'cart.general.empty' | t }}</h3>
+        <p class="cart-empty__text">{{ 'cart.general.empty_subtext' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn-primary">{{ 'cart.general.shop_now' | t }}</a>
+      </div>
+    {%- else -%}
+      {%- for item in cart.items -%}
+        <div class="cart-item" data-line="{{ forloop.index }}">
+          <div class="cart-item__image">
+            {%- if item.image -%}
+              <img width="800" height="auto" src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" loading="lazy">
+            {%- endif -%}
+          </div>
+          <div class="cart-item__details">
+            <div class="cart-item__header">
+              <div>
+                <h3 class="cart-item__title">{{ item.product.title }}</h3>
+                {%- if item.variant.title != 'Default Title' -%}
+                  <p class="cart-item__variant">{{ item.variant.title }}</p>
+                {%- endif -%}
+              </div>
+              <button class="cart-item__remove" data-line="{{ forloop.index }}" aria-label="Remove {{ item.title }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+            <div class="cart-item__footer">
+              <div class="quantity-selector">
+                <button class="quantity-selector__btn" data-action="decrease" data-line="{{ forloop.index }}" aria-label="Decrease quantity">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <input type="number" class="quantity-selector__input" value="{{ item.quantity }}" min="1" data-line="{{ forloop.index }}" aria-label="Quantity">
+                <button class="quantity-selector__btn" data-action="increase" data-line="{{ forloop.index }}" aria-label="Increase quantity">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+              </div>
+              <span class="cart-item__price">₹{{ item.final_line_price | money_without_currency }}</span>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if cart.item_count > 0 -%}
+    <div class="cart-drawer__footer">
+      <div class="cart-summary__row">
+        <span class="cart-summary__label">{{ 'cart.general.subtotal' | t }}</span>
+        <span>₹{{ cart.total_price | money_without_currency }}</span>
+      </div>
+      <p style="font-size:0.7rem;color:var(--color-muted-fg);margin:0.5rem 0;">{{ 'cart.general.shipping_at_checkout' | t }}</p>
+      <a href="/checkout" class="btn-primary" style="width:100%;display:block;text-align:center;">{{ 'cart.general.checkout' | t }}</a>
+      <button class="cart-summary__continue" id="cart-continue-shopping">{{ 'cart.general.continue_shopping' | t }}</button>
+    </div>
+  {%- endif -%}
+</div>

@@ -1,0 +1,112 @@
+{% comment %} By Shopify Partner ak44sh - High-Performance Brutalist Theme {% endcomment %}
+<div class="collection-page">
+  <div class="container">
+
+    {%- comment -%} Collection Header {%- endcomment -%}
+    <div class="collection-header reveal">
+      <p class="luxury-subheading" style="margin-bottom:1rem;">Collection</p>
+      <h1 class="collection-header__title">{{ collection.title | default: 'Shop All' }}</h1>
+      {%- if collection.description != blank -%}
+        <p style="color:var(--color-muted-fg);max-width:40rem;margin:1rem auto 0;font-size:var(--text-sm);">{{ collection.description }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Toolbar {%- endcomment -%}
+    <div class="collection-toolbar" style="flex-wrap: wrap;">
+      <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+        <div class="collection-toolbar__categories">
+          <a href="{{ routes.all_products_collection_url }}" class="collection-toolbar__cat-btn{% if collection.handle == 'all' %} is-active{% endif %}">All</a>
+          {%- for link in linklists['main-menu'].links -%}
+            <a href="{{ link.url }}" class="collection-toolbar__cat-btn{% if link.active %} is-active{% endif %}">
+              {{ link.title }}
+            </a>
+          {%- endfor -%}
+        </div>
+        <div class="collection-toolbar__right">
+          <span class="collection-toolbar__count">{{ collection.products_count }} Products</span>
+          <div style="position:relative;">
+            {%- assign current_sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            <select class="collection-toolbar__select" onchange="window.location.href=this.value">
+              <option value="{{ collection.url }}?sort_by=created-descending"{% if current_sort_by == 'created-descending' %} selected{% endif %}>Newest</option>
+              <option value="{{ collection.url }}?sort_by=price-ascending"{% if current_sort_by == 'price-ascending' %} selected{% endif %}>Price: Low to High</option>
+              <option value="{{ collection.url }}?sort_by=price-descending"{% if current_sort_by == 'price-descending' %} selected{% endif %}>Price: High to Low</option>
+              <option value="{{ collection.url }}?sort_by=best-selling"{% if current_sort_by == 'best-selling' %} selected{% endif %}>Best Selling</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {%- if collection.filters.size > 0 -%}
+        <form class="collection-filters" style="width: 100%; border-top: 1px solid var(--color-border); padding-top: 1.5rem; margin-top: 1.5rem; display: flex; gap: 3rem; flex-wrap: wrap;">
+          {%- for filter in collection.filters -%}
+            <div class="filter-group">
+              <p style="font-weight:600; font-size:var(--text-sm); margin-bottom:0.75rem; text-transform:uppercase;">{{ filter.label }}</p>
+              {%- if filter.type == 'list' -%}
+                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                  {%- for value in filter.values -%}
+                    <label style="font-size:var(--text-sm); display:flex; align-items:center; gap:0.5rem; cursor:pointer; color:{% if value.active %}var(--color-fg){% else %}var(--color-muted-fg){% endif %};">
+                      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="Filter-{{ filter.label | escape }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()" style="accent-color:var(--color-fg);">
+                      {{ value.label }} ({{ value.count }})
+                    </label>
+                  {%- endfor -%}
+                </div>
+              {%- elsif filter.type == 'price_range' -%}
+                <div style="display:flex; gap:0.5rem; align-items:center;">
+                  <span style="font-size:var(--text-sm); font-family:var(--font-mono);">₹</span>
+                  <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | divided_by: 100 }}" min="0" placeholder="Min" style="width:80px; padding:0.5rem; border:1px solid var(--color-border); background:transparent; font-family:var(--font-mono); font-size:var(--text-sm);" onchange="this.form.submit()">
+                  <span style="color:var(--color-muted-fg);">-</span>
+                  <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | divided_by: 100 }}" min="0" max="{{ filter.range_max | divided_by: 100 }}" placeholder="Max" style="width:80px; padding:0.5rem; border:1px solid var(--color-border); background:transparent; font-family:var(--font-mono); font-size:var(--text-sm);" onchange="this.form.submit()">
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+          <div style="align-self: flex-end; margin-left:auto;">
+             <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="btn-outline" style="padding: 0.5rem 1rem; font-size:var(--text-sm);">Clear Filters</a>
+          </div>
+        </form>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Products Grid {%- endcomment -%}
+    <section style="padding:3rem 0 4rem;">
+      {%- if collection.products.size == 0 -%}
+        <div style="text-align:center;padding:5rem 0;">
+          <p style="color:var(--color-muted-fg);">No products found</p>
+        </div>
+      {%- else -%}
+        {%- assign current_sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+        <div class="product-grid">
+          {%- paginate collection.products by 12 -%}
+            {%- for product in collection.products -%}
+              <div class="reveal" style="animation-delay: {{ forloop.index | times: 0.1 }}s;">
+                {%- render 'product-card', product: product -%}
+              </div>
+            {%- endfor -%}
+
+            {%- if paginate.pages > 1 -%}
+              <div style="grid-column: 1 / -1;">
+                <nav class="pagination">
+                  {%- if paginate.previous -%}
+                    <a href="{{ paginate.previous.url }}" class="pagination__link">←</a>
+                  {%- endif -%}
+                  {%- for part in paginate.parts -%}
+                    {%- if part.is_link -%}
+                      <a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>
+                    {%- else -%}
+                      <span class="pagination__current">{{ part.title }}</span>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if paginate.next -%}
+                    <a href="{{ paginate.next.url }}" class="pagination__link">→</a>
+                  {%- endif -%}
+                </nav>
+              </div>
+            {%- endif -%}
+          {%- endpaginate -%}
+        </div>
+      {%- endif -%}
+    </section>
+
+  </div>
+</div>
